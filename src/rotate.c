@@ -17,7 +17,7 @@ void lr_rotate(int n1, int n2)
     height[n2] = width[n2];
     for (size_t y = 0; y < height[n1]; y++){
         for (size_t x = 0; x < width[n1]; x++){
-            image[n2][y][x] = image[n1][width[n1]-1-x][height[n1]-1-y];
+            image[n2][y][x] = image[n1][x][y];
         }
     }
 
