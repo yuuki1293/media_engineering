@@ -8,6 +8,7 @@ int main(void)
 {
     load_image( 0, "" );   /* ファイル → 画像No.0 */
     error_diffusion( 0 );  /* 画像No.0を誤差拡散で２値化 */
+    printf("変換後: %d\n", image[0][100][80]);
     save_image( 0, "" );   /* 画像No.0 → ファイル */
     return 0;
 }
