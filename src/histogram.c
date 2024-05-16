@@ -1,9 +1,8 @@
 /* histogram.c  このプログラムの名前 */
 #include<stdio.h>
 #include"pgmlib.h"
+#include"histogram.h"
 long int hist[256]; /* ヒストグラム用１次元配列 */
-void make_histogram( int n );
-void make_histogram_image( int h, int n );
 
 int main(void)
 {
