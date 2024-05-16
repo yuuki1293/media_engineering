@@ -4,15 +4,15 @@
 #include"histogram.h"
 long int hist[256]; /* ヒストグラム用１次元配列 */
 
-int main(void)
-{
-    load_image( 0, "" );   /* ファイル → 画像No.0 */
-    make_histogram( 0 );    /* 画像No.0のヒストグラムの作成 */
-    /* ヒストグラムの画像を作って画像No.1に保存 */
-    make_histogram_image( 256, 1 );
-    save_image( 1, "" );   /* 画像No.1 → ファイル */
-    return 0;
-}
+// int main(void)
+// {
+//     load_image( 0, "" );   /* ファイル → 画像No.0 */
+//     make_histogram( 0 );    /* 画像No.0のヒストグラムの作成 */
+//     /* ヒストグラムの画像を作って画像No.1に保存 */
+//     make_histogram_image( 256, 1 );
+//     save_image( 1, "" );   /* 画像No.1 → ファイル */
+//     return 0;
+// }
 
 void make_histogram( int n )
 /* 画像No.n を元にヒストグラムを作る */
