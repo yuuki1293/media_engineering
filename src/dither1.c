@@ -11,7 +11,9 @@ void dither( int n );
 int main(void)
 {
     load_image( 0, "" );   /* ファイル → 画像No.0 */
+    printf("元画像: %d\n", image[0][100][80]);
     dither( 0 );           /* 画像No.0をディザ法で２値化 */
+    printf("変化後: %d\n", image[0][100][80]);
     save_image( 0, "" );   /* 画像No.0 → ファイル */
     return 0;
 }
