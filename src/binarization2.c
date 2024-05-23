@@ -38,7 +38,7 @@ void binarize(int n)
     {
         for (x = 0; x < width[n]; x++)
         {
-            if (image[n][x][y] <= 127)
+            if (image[n][x][y] <= 120)
                 image[n][x][y] = 0;
             else
                 image[n][x][y] = 255;
