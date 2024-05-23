@@ -15,7 +15,9 @@ void filtering( int n1, int n2 );
 int main(void)
 {
     load_image( 0, "" );   /* ファイル → 画像No.0 */
+    printf("階調値: %d\n", image[0][100][80]);
     filtering( 0, 1 );     /* No.0->フィルタ->No.1 */  
+    printf("ラプラシアン階調値: %d\n", image[1][100][80]);
     save_image( 1, "" );   /* 画像No.1 → ファイル */
     return 0;
 }
@@ -58,6 +60,7 @@ void filtering( int n1, int n2 )
         for(x=1;x<width[n1]-1;x++){
             value = calc( n1, x, y );
             image[n2][x][y] = (int)((double)(value - min)/(max - min)*255.0);
+            if(x==100&&y==80) printf("lap: %d\n", value);
         }
     }
     /* 外周部の補間 */
