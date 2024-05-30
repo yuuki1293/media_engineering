@@ -6,7 +6,7 @@ void range( int n1, int n2 );
 int main(void)
 {
     load_image( 0, "" );   /* ファイル → 画像No.0 */
-    Forsen( 0, 1 );        /* No.0->フィルタ->No.1 */  
+    range( 0, 1 );        /* No.0->フィルタ->No.1 */  
     save_image( 1, "" );   /* 画像No.1 → ファイル */
     return 0;
 }
@@ -33,6 +33,7 @@ void range( int n1, int n2 )
                 }
             }
             image[n2][x][y] = max - min;  /* ＝レンジ */
+            if(x==100&&y==80)printf("変更前階調値: %d\nvalue: %d\n変更後階調値: %d\n", image[n1][x][y], max - min, image[n2][x][y]);
         }
     }
 }
