@@ -6,6 +6,7 @@ void Forsen( int n1, int n2 );
 int main(void)
 {
     load_image( 0, "" );   /* ファイル → 画像No.0 */
+    printf("変更前階調値: %d\n", image[0][100][80]);
     Forsen( 0, 1 );        /* No.0->フィルタ->No.1 */  
     save_image( 1, "" );   /* 画像No.1 → ファイル */
     return 0;
@@ -25,6 +26,8 @@ void Forsen( int n1, int n2 )
             value = abs( image[n1][x][y] - image[n1][x+1][y+1] )
                 + abs( image[n1][x][y+1] - image[n1][x+1][y] );
             image[n2][x][y] = value / 2;
+
+            if(x==100&&y==80)printf("value: %d\n変更後階調値: %d\n", value, value / 2);
         }
     }
 }
