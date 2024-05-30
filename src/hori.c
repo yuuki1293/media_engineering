@@ -70,8 +70,6 @@ void filtering(int n1, int n2)
             if (value > 255)
                 value = 255;
             image[n2][x][y] = (int)value;
-            if (x == 100 && y == 80)
-                printf("変更前階調値: %d\nvalue: %d\n変更後階調値: %d\n", image[n1][x][y], value, image[n2][x][y]);
         }
     }
     /* 外周部の補間 */
