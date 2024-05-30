@@ -64,6 +64,7 @@ void filtering( int n1, int n2 )
             value = calc( n1, x, y );  /* 関数calcを利用 */
             image[n2][x][y] =
                 (int)((double)(value - min)/(max - min)*255.0);
+            if(x==100&&y==80)printf("変更前階調値: %d\nvalue: %d\n変更後階調値: %d\n", image[n1][x][y], value, image[n2][x][y]);
         }
     }
     /* 外周部の補間（座標を画像内にシフトして値をコピー） */
