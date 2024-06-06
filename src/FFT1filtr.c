@@ -51,7 +51,7 @@ void filtering_frequency( )
     }
 }
 
-main( )
+int main( )
 {
 
 	
