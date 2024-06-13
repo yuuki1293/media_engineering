@@ -8,12 +8,14 @@
 void add_sin_waves( int n, double a0, double a, double Nx,
   double theta_x, double Ny, double theta_y );
 /* 画像No.nを作る */
-void make_original_image( int n );  
+void make_original_image( int n1, int n2, int n3 );  
 
 int main(void)
 {
-    make_original_image( 0 );    /* 画像No.0を作る */
+    make_original_image( 0 , 1, 2);    /* 画像No.0を作る */
     save_image( 0, "" );   /* 画像No.0 → ファイル */
+    save_image( 1, "" );   /* 画像No.1 → ファイル */
+    save_image( 2, "" );   /* 画像No.2 → ファイル */
     return 0;
 }
 
@@ -38,13 +40,19 @@ void add_sin_waves( int n, double a0, double a, double Nx,
         }
 }
 
-void make_original_image( int n )
+void make_original_image( int n1, int n2, int n3 )
 /* 画像No.nを作る */
 {
     /* 256×256画素，画素値0で初期化 */
-    width[n] = 256;  height[n] = 256;
-    init_image( n, 0);
+    width[n1] = 256;  height[n1] = 256;
+    init_image( n1, 0);
+    width[n2] = 256;  height[n2] = 256;
+    init_image( n2, 0);
+    width[n3] = 256;  height[n3] = 256;
+    init_image( n3, 0);
     /* sin波を加える */
     /* (画像番号, a0, a, Nx, theta_x, Ny, theta_y) */
-    add_sin_waves( n, 128.0, 128.0, 128.0, 0.0, 0.0, 0.0 );
+    add_sin_waves( n1, 128.0, 128.0, 128.0, 0.0, 0.0, 0.0 );
+    add_sin_waves( n2, 128.0, 128.0, 0.0, 0.0, 128.0, 0.0 );
+    add_sin_waves( n3, 128.0, 128.0, 256.0, 0.0, 128.0, 0.0 );
 }
