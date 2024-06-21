@@ -10,7 +10,7 @@ int main() {
 
     for (size_t i = 0; i < 8; i++)
     {
-        printf("%lf%+lf\n", re[i], im[i]);
+        printf("F(%zu) = %lf%+lfi\n", i, re[i], im[i]);
     }
 
     return 0;
