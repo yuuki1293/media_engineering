@@ -52,7 +52,7 @@ void make_original_image( int n1, int n2, int n3 )
     init_image( n3, 0);
     /* sin波を加える */
     /* (画像番号, a0, a, Nx, theta_x, Ny, theta_y) */
-    add_sin_waves( n1, 128.0, 128.0, 128.0, 0.0, 0.0, 0.0 );
-    add_sin_waves( n2, 128.0, 128.0, 0.0, 0.0, 128.0, 0.0 );
-    add_sin_waves( n3, 128.0, 128.0, 256.0, 0.0, 128.0, 0.0 );
+    add_sin_waves( n1, 128.0, 128.0, 256.0, 0.0, 0, 0.0 );
+    add_sin_waves( n2, 128.0, 128.0, 128.0, 0.0, 128.0, 0.0 );
+    add_sin_waves( n3, 128.0, 128.0, 64.0, 0.0, 128.0, 0.0 );
 }
