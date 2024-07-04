@@ -127,13 +127,13 @@ void code_and_save_runlength_data(int n )
     /* データ量・圧縮率関係の計算と表示 */
     printf("元の２値画像のデータ量 = %d x %d = %d bits\n",
         width[n],height[n],width[n] * height[n]);
-    printf("圧縮データ（画像部分）のデータ量 = %d bits\n",
+    printf("圧縮データ（画像部分）のデータ量 = %ld bits\n",
         coded_data_size);
     printf("圧縮率：%f[％]\n", 100.0 * coded_data_size / 
         (width[n] * height[n]) );
 }
 
-main( )
+int main( )
 {
     load_image( 0,"");              /* 原画像の読み込み */
     code_and_save_runlength_data(0); /* コード化と保存   */
