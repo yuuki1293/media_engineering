@@ -90,7 +90,7 @@ void load_and_decode_runlength_data(int n )
     fclose( fp );
 }
 
-main( )
+int main( )
 {
     load_and_decode_runlength_data(0 );  /* 読み込みとデコード */
     save_image(0,"" );                 /* 復号化画像の保存   */
