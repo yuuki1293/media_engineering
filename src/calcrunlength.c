@@ -13,7 +13,7 @@ int main(void)
     make_bitmask(N);    /* 1～Nビットまでのマスクを作る */
     printf("原画像を読み込みます．\n");
     load_image( 0, "" );          /* ファイル → 画像No.0 */
-    make_binary_image( 0, 120 );  /* 固定しきい値120で２値化 */
+    make_binary_image( 0, 150 );  /* 固定しきい値120で２値化 */
     printf("　２値化画像を保存します．\n");
     save_image( 0, "" );          /* 画像No.0 → ファイル */
     runlength_coding( 0 );  /* 画像No.0をランレングス符号化 */
