@@ -1,4 +1,4 @@
-/* bitplane-r.c  このプログラムの名前 */
+/* bitplane-r3.c  このプログラムの名前 */
 #include<stdio.h>
 #include"pgmlib.h"
 void extract_image( int n1, int n2 );
