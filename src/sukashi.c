@@ -130,7 +130,7 @@ void decoding( )
     save_image(2,"" );     /* 画像を保存する */
 }
 
-main( )
+int main( )
 {
     int mode;
 
