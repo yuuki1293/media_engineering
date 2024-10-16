@@ -23,7 +23,7 @@ void extract_image( int n1, int n2 )
     height[n2] = height[n1];
     for(y=0;y<height[n1];y++){
         for(x=0;x<width[n1];x++){
-            bitmask = (x + y) % 3 + 6;
+            bitmask = 0b10000000 >> ((x + y) % 3 + 5);
 
             if ( image[n1][x][y] & bitmask ) /* 白画素 */
                 image[n2][x][y] = 255;

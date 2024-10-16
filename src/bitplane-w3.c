@@ -27,7 +27,7 @@ void hide_image( int n1, int n2 )
 
     for(y=0;y<height[n1];y++){
         for(x=0;x<width[n1];x++){
-            bitmask = (x + y) % 3 + 6;
+            bitmask = 0b10000000 >> ((x + y) % 3 + 5);
 
             if ( image[n2][x][y] == 255 ) /* 白画素 */
                 /* ビットごとの演算でLSBを1にする */
