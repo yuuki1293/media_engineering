@@ -116,7 +116,7 @@ void thinning( )
     } while ( counter != 0 );
 }
 
-main( )
+int main( )
 {
     load_image(0,"" ); /* 画像を読み込んで image1 へ */
 	    width[1] = width[0];    height[1] = height[0];
