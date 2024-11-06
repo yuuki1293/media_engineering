@@ -94,7 +94,7 @@ void check_data( )
     }
 }
 
-main( )
+int main( )
 {
     printf("まず，元の画像データを読み込みます．\n");
     load_image(1,"" );  /* 原画像を image1 へ */
