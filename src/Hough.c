@@ -76,7 +76,7 @@ void Hough_transform( )
     }
 }
 
-main( )
+int main( )
 {
     load_image(1,"" ); /* 画像を読み込んで image1 へ */
     Hough_transform( ); /* Hough 変換して結果を image2 へ */
