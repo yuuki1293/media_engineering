@@ -42,6 +42,7 @@ void extract_line( int xs, int ys )
                 image[2][x][y] = MAX_BRIGHTNESS;
         }
     }
+    printf("theta = %f rho = %f\n", theta, rho);
 }
 
 void inverse_Hough_transform( )
