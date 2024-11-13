@@ -242,7 +242,7 @@ void clustering_using_Kmeans( )
     printf("K-平均法によるクラスタリングが終了しました．\n");
 }
 
-main( )
+int main( )
 {
     load_image(1,"" );           /* 画像ファイル --> image1  */
     obtain_points_data( );        /* image1中の点をデータ化   */
