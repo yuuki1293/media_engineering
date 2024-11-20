@@ -49,5 +49,6 @@ void recognition( int n1, int n2 )
                     if (ratio <= MINRATIO) image[n2][x][y]=160;
                     if (area  <= MINAREA) image[n2][x][y]=80;
                 }
+        printf("[%d] ratio = %f area = %d\n", i, ratio, area);
     }
 }
