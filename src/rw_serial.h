@@ -9,7 +9,7 @@ void set_serial_parameters( int *st, int *end, int *keta,
 void make_file_name( char hdr[], int num, int keta, char str[] );
 
 
-void itoa(int value, char *buf);
+void itoa2(int value, char *buf);
 char *strrev(char *s);
 
 void set_serial_parameters( int *st, int *end, int *keta, 
@@ -59,7 +59,7 @@ void make_file_name( char hdr[], int num, int keta, char str[] )
     char buffer[20];
     int length,i;
 
-    itoa( num, buffer );  /* num を10進数にして buffer[] へ */
+    itoa2( num, buffer );  /* num を10進数にして buffer[] へ */
     length = strlen(buffer);   /* 何文字かを調べる */
     if (hdr != "") strcpy( str, hdr );
     for(i=1;i<=keta-length;i++)  strcat( str, "0" );
@@ -70,7 +70,7 @@ void make_file_name( char hdr[], int num, int keta, char str[] )
 //
 //  関数の追加　itoa
 //
-void itoa(int value, char *buff)
+void itoa2(int value, char *buff)
 {
 	char *p;
 	int mod;
