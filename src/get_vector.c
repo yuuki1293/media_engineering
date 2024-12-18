@@ -5,7 +5,7 @@
 #define WIN_H  5  /* ウィンドウ縦：WIN_H*2+1 */
 #define XSCAN 10  /* 走査範囲：XSCAN*2+1     */
 #define YSCAN 10  /* 走査範囲：YSCAN*2+1     */
-#define STEP   5  /* 速度を求める間隔[画素]  */
+#define STEP   10  /* 速度を求める間隔[画素]  */
 unsigned char window[WIN_W*2+1][WIN_H*2+1]; /* テンプレート用 */
 
 int inside( int n, int x, int y );
