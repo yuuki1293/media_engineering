@@ -23,7 +23,7 @@ void extract_image( )
             if ( image[1][x][y] == 0 ) image[2][x][y] = 0;
 }
 
-int main( )
+main( )
 {
     printf("*** 原画像のデータを読み込みます．\n");
     load_image(1,"" );        /* 画像1 --> image1      */
