@@ -156,7 +156,7 @@ void block_matching( )
                 draw_vector( x, y, x_vctr[x][y], y_vctr[x][y] );
 }
 
-main( )
+int main( )
 {
     printf("===== 動きベクトルの検出 =====\n");
     printf("frame No.2 を読み込みます．\n");
