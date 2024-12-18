@@ -17,7 +17,7 @@ int main( )
     load_image(1,"" );        /* 画像1 --> image1      */
     printf("*** 画像2のデータを読み込みます．\n");
     load_image(2,"" );        /* 画像1 --> image1      */
-    
+    and();
     printf("*** AND画像のデータを保存します．\n");
     save_image(2,"" );        /* image2 --> 出力      */
     return 0;
