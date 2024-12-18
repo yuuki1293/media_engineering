@@ -59,7 +59,7 @@ void make_mask_image( )
     }
 }
 
-main( )
+int main( )
 {
     printf("*** frame No.1 のデータを読み込みます．\n");
     load_image(1,"" );        /* frame1 データ --> image1  */
