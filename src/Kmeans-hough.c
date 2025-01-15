@@ -1,10 +1,8 @@
-/* K-平均法による点のクラスタリングのプログラム Kmeans.c */
+/* 直線検出プログラム Kmeans-hough.c */
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
 #include"pgmlib.h"
-
-#define THRESH 180
 
 #define PI  3.141592653589  /* 円周率 */
 #define MAX_THETA   360  /* θ軸のサイズ（0.5[deg]=１画素）*/
@@ -13,101 +11,7 @@
 #define MAX_CLSTR  3000     /* 想定する最大クラスタ数  */
 #define DARK_PIXEL  128     /* 暗い画素の階調値 */
 
-int points[MAX_PNTS][2];        /* 点の座標                */
-int num_pnts;                   /* 点の総数                */
-int point_clstr[MAX_PNTS];      /* 点が属するクラスタ番号  */
-
-int center_clstr[MAX_CLSTR][2]; /* クラスタの代表点の座標  */
-int num_clstr;                  /* クラスタの総数          */
-
-void swap_int( int *n1, int *n2 )
-/* int n1 と int n2 を入れ替える */
-{
-    int n;  /* 作業変数 */
-
-    n = *n1;    *n1 = *n2;    *n2 = n;
-}
-
-void extract_line(int img, int xs, int ys )
-/* θρ平面上（image1上）の点(xs,ys)を画像上の直線に逆変換し，   */
-/* 結果を image2[y][x] に描く                                    */
-{
-    double theta, rho, rho_max, _sin, _cos;  /* 作業変数 */
-    int x, y;  /* 制御変数 */
-
-    theta = 180.0 * xs / MAX_THETA;  /* [deg] */
-    _sin = sin( theta / 180.0 * PI );
-    _cos = cos( theta / 180.0 * PI );
-    rho_max = 1.0 / 1.5 * width[img] + 1.0 / 1.5 * height[img];
-    rho = ( ys - MAX_RHO / 2.0 ) * rho_max / MAX_RHO * 2.0; 
-    /*  rho = x _cos + y _sin  --->  y = rho/_sin - x _cos/_sin  */
-    if ( 45.0 <= theta && theta <= 135.0 ){ /* 数値の単位は[deg] */
-        for ( x = 0; x < width[img]; x ++ ){
-            y = (int)( ( rho - x * _cos ) / _sin );
-            if ( 0 <= y && y < height[2] )
-                image[img][x][y] = MAX_BRIGHTNESS; 
-        }
-    } else {
-        for ( y = 0; y < height[img]; y ++ ){
-            x = (int)( ( rho - y * _sin ) / _cos );
-            if ( 0 <= x && x < width[2] )
-                image[img][x][y] = MAX_BRIGHTNESS;
-        }
-    }
-    printf("theta = %f rho = %f\n", theta, rho);
-}
-
-void inverse_Hough_transform(int sp, int img)
-/* image1 を θρ平面とみなし，しきい値より上の点を画像空間に */
-/* 逆変換して画像中に直線を描く．結果は image2 に代入する．   */
-{
-    int threshold,counter;  /* しきい値，直線のカウンタ */
-    int x,y;  /* 制御変数 */
-    char str[10];  /* 作業変数 */
-
-    printf("読み込んだθρ平面から，画像上の直線を再現します．\n");
-    do {
-        printf("θρ平面上の累積に対するしきい値 (0～255の値）= ");
-        scanf("%d",&threshold);
-        counter = 0;
-        for ( y = 0; y < MAX_RHO;  y ++ )
-            for ( x = 0; x < MAX_THETA; x ++ )
-                if ( image[sp][x][y] >= threshold ) counter ++;
-        printf("全部で %d 本の直線が検出されました．\n", counter);
-        printf("この値で OK ? ( y / n ) :");
-        scanf("%s",str);
-    } while ( str[0] != 'y' && str[0] != 'Y' );
-    /* 逆変換処理の実行 */
-    for ( y = 0; y < MAX_RHO; y ++ )
-        for ( x = 0; x < MAX_THETA; x ++ )
-            if ( image[sp][x][y] >= threshold )
-                extract_line(img, x, y );
-}
-
-void move_image1_to_image2( )
-/* 原画像データをimage2[y][x]に退避する */
-/* その際，階調を落とす (=80)          */
-{
-    int x, y;  /* 制御変数 */
-
-    width[2] = width[1];    height[2] = height[1];
-    for ( y = 0; y < height[1]; y ++ )
-        for ( x = 0; x < width[1]; x ++ ){
-            image[2][x][y] = image[1][x][y];
-            if ( image[2][x][y] == MAX_BRIGHTNESS )
-                image[2][x][y] = 80;
-        }
-}
-
-void check_data(int img)
-{
-    if ( width[img] != MAX_THETA || height[img] != MAX_RHO ){
-        printf("これは対象とするθρ平面のデータと異なります．\n");
-        exit(1);
-    }
-}
-
-void draw_a_straight_line(int img, int x1, int y1, int x2, int y2 )
+void draw_a_straight_line( int x1, int y1, int x2, int y2, int n)
 /* image2[y][x] 上の２点(x1,y1)，(x2,y2)間の直線上の配列要素 */
 /* の値をインクリメントする． */
 {
@@ -120,9 +24,9 @@ void draw_a_straight_line(int img, int x1, int y1, int x2, int y2 )
     while ( t < 1.0 ){
         x = (int)( t * x2 + ( 1.0 - t ) * x1 );
         y = (int)( t * y2 + ( 1.0 - t ) * y1 );
-        if ( x >= 0 && x < width[img] && y >= 0 && y < height[img]
-            && image[img][x][y] < MAX_BRIGHTNESS ){
-            image[img][x][y] ++;
+        if ( x >= 0 && x < width[n] && y >= 0 && y < height[n]
+            && image[n][x][y] < MAX_BRIGHTNESS ){
+            image[n][x][y] ++;
         }
         t = t + step;
     }
@@ -135,23 +39,23 @@ int _calc_rho( double px, double py, double r_mg, int theta )
                + py * sin( theta * PI / MAX_THETA ) ) + MAX_RHO / 2.0);
 }
 
-void draw_a_curve(int src, int dst, double px, double py )
+void draw_a_curve( double px, double py, int n, int m)
 /* ρ＝ｘ・cosθ＋y・sinθの曲線を，配列image2[rho][theta]に描く．   */
 {
     double rho_max;  /* ρ軸方向の最大値[画素] */
     double rho_c;    /* ρ方向の係数 */
     int theta;       /* θの単位は[deg]  */
 
-    rho_max = 1.0 / 1.5 * width[src] + 1.0 / 1.5 * height[src];
+    rho_max = 1.0 / 1.5 * width[n] + 1.0 / 1.5 * height[n];
     rho_c = MAX_RHO / 2.0 / rho_max;
         /* データから座標への変換係数 */
     for ( theta = 0; theta < MAX_THETA; theta ++ ){
-        draw_a_straight_line(dst, theta, _calc_rho( px, py, rho_c, theta),
-            theta + 1, _calc_rho( px, py, rho_c, theta + 1) );
+        draw_a_straight_line( theta, _calc_rho( px, py, rho_c, theta),
+            theta + 1, _calc_rho( px, py, rho_c, theta + 1), m);
     }
 }
 
-void Hough_transform(int src, int dst )
+void Hough_transform(int n, int m)
 /* 原画像 image1[y][x] を Hough 変換し，結果をθρ平面 */
 /* image2[rho][theta] に代入する．ただしθρ平面の横軸・縦軸の */
 /* 大きさは MAX_THETA, MAX_RHO であらかじめ決められている．*/
@@ -160,22 +64,29 @@ void Hough_transform(int src, int dst )
     int x, y;
 
     /* θρ平面の初期化 */
-    width[dst] = MAX_THETA;    height[dst] = MAX_RHO;
-    for ( y = 0; y < height[dst]; y ++ )
-        for ( x = 0; x < width[dst]; x ++ )
-            image[dst][x][y] = 0;
+    width[m] = MAX_THETA;    height[m] = MAX_RHO;
+    for ( y = 0; y < height[m]; y ++ )
+        for ( x = 0; x < width[m]; x ++ )
+            image[m][x][y] = 0;
     /* 変換処理の実行 */
     printf("Hough 変換を実行中です．\n");
-    for ( y = 0; y < height[src]; y ++ ){
-        for ( x = 0; x < width[src]; x ++ ){
-            if ( image[src][x][y] == MAX_BRIGHTNESS ){
-                draw_a_curve(src, dst, (double)x, (double)y );
+    for ( y = 0; y < height[n]; y ++ ){
+        for ( x = 0; x < width[n]; x ++ ){
+            if ( image[n][x][y] == MAX_BRIGHTNESS ){
+                draw_a_curve( (double)x, (double)y, n, m);
             }
         }
     }
 }
 
-void draw_a_circle(int img, int x, int y, int r )
+int points[MAX_PNTS][2];        /* 点の座標                */
+int num_pnts;                   /* 点の総数                */
+int point_clstr[MAX_PNTS];      /* 点が属するクラスタ番号  */
+
+int center_clstr[MAX_CLSTR][2]; /* クラスタの代表点の座標  */
+int num_clstr;                  /* クラスタの総数          */
+
+void draw_a_circle( int x, int y, int r )
 /* image2[y][x] に中心 (x,y) 半径 r の円を描く．全周で最大   */
 /* 360 個の点を描くが，大きい円の場合は点線になることもある．*/
 {
@@ -185,8 +96,8 @@ void draw_a_circle(int img, int x, int y, int r )
     for ( theta = 0; theta < 360; theta ++ ){
         xp = (int)( x + r * cos( theta * PI / 180.0 ) );
         yp = (int)( y + r * sin( theta * PI / 180.0 ) );
-        if ( xp >= 0 && xp < width[img] && yp >= 0 && yp < height[img] )
-            image[img][ xp ][ yp ] = DARK_PIXEL;  /* 暗い画素 */
+        if ( xp >= 0 && xp < width[2] && yp >= 0 && yp < height[2] )
+            image[2][ xp ][ yp ] = DARK_PIXEL;  /* 暗い画素 */
     }
 }
 
@@ -207,15 +118,15 @@ int random_int( int n )
     return (int)( (double)rand( ) / ( (double)RAND_MAX + 1.0 ) * n );
 }
 
-void obtain_points_data(int img )
+void obtain_points_data(int n)
 /* image1[y][x] 中の白画素のデータを points[ ][ ]に代入 */
 {
     int x, y;   /* ループ変数 */
 
     num_pnts = 0;
-    for ( y = 0; y < height[img]; y ++ ){
-        for ( x = 0; x < width[img]; x ++ ){
-            if ( image[img][x][y] == MAX_BRIGHTNESS ){
+    for ( y = 0; y < height[n]; y ++ ){
+        for ( x = 0; x < width[n]; x ++ ){
+            if ( image[n][x][y] >= 128 ){ // Bright threshold
                 if ( num_pnts < MAX_PNTS - 2 ){
                     num_pnts ++;
                     points[num_pnts - 1][0] = x;
@@ -262,7 +173,7 @@ void shuffle_points_data( )
     }
 }
 
-void clustering_using_Kmeans(int src, int dst)
+void clustering_using_Kmeans(int n, int m)
 /* K-平均法によるクラスタリングを行う */
 {
     int K_number;       /* K の値（生成するクラスタの総数） */
@@ -353,48 +264,141 @@ void clustering_using_Kmeans(int src, int dst)
         }
         if ( finish == 1 ){  /* 処理終了 */ 
             /* image2[y][x] の初期化 */
-            width[dst] = width[src];  height[dst] = height[src];
-            for ( y = 0; y < height[dst]; y ++ )
-                for ( x = 0; x < width[dst]; x ++ )
-                    image[dst][x][y] = image[src][x][y];
-            /* クラスタ中心と各点データまでの線分を描く   */
-            for ( i = 0; i < num_pnts; i ++ ){
-                draw_a_straight_line(dst, points[i][0], points[i][1],
-                    center_clstr[ point_clstr[i] ][0],
-                    center_clstr[ point_clstr[i] ][1] );
+            width[m] = width[n];  height[m] = height[n];
+            for ( y = 0; y < height[m]; y ++ )
+                for ( x = 0; x < width[m]; x ++ )
+                    image[m][x][y] = 0;
+
+            /* クラスタの最も階調値が高い点を取得する */
+            int centers[10][2] = {{0}};
+            int brights[10] = {0};
+            for (i = 0; i < num_pnts; i++)
+            {
+                int ci = point_clstr[i];
+                x = points[i][0];
+                y = points[i][1];
+
+                if(brights[ci] < image[n][x][y]){
+                    centers[ci][0] = x;
+                    centers[ci][1] = y;
+                    brights[ci] = image[n][x][y];
+                }
             }
-            /* image2[y][x] にクラスタ中心と円を描く      */
-            /* 円の半径＝そのクラスタに所属する最も遠い点 */
-            /* までの距離(=radius_clstr[ ]) + 5           */
+            
             for ( i = 0; i < num_clstr; i ++ ){
-                printf("No.%d のクラスタの半径 = %d\n", 
-                    i + 1, radius_clstr[i] );
-                draw_a_circle(dst, center_clstr[i][0],
-                    center_clstr[i][1], 5 );
-                draw_a_circle(dst, center_clstr[i][0],
-                    center_clstr[i][1], radius_clstr[i] + 5 );
+                printf("center[%d] x = %d, y = %d\n", i, centers[i][0], centers[i][1]);
+                image[m][centers[i][0]][centers[i][1]] = 255;
             }
-            /* image2[y][x] に元のデータ点を再描画する */
-            for ( i = 0; i < num_pnts; i ++ )
-                image[dst][ points[i][0] ][ points[i][1] ] =
-                    MAX_BRIGHTNESS;
         }
     }
     printf("K-平均法によるクラスタリングが終了しました．\n");
 }
 
+void swap_int( int *n1, int *n2 )
+/* int n1 と int n2 を入れ替える */
+{
+    int n;  /* 作業変数 */
+
+    n = *n1;    *n1 = *n2;    *n2 = n;
+}
+
+void extract_line( int xs, int ys, int n)
+/* θρ平面上（image1上）の点(xs,ys)を画像上の直線に逆変換し，   */
+/* 結果を image2[y][x] に描く                                    */
+{
+    double theta, rho, rho_max, _sin, _cos;  /* 作業変数 */
+    int x, y;  /* 制御変数 */
+
+    theta = 180.0 * xs / MAX_THETA;  /* [deg] */
+    _sin = sin( theta / 180.0 * PI );
+    _cos = cos( theta / 180.0 * PI );
+    rho_max = 1.0 / 1.5 * width[n] + 1.0 / 1.5 * height[n];
+    rho = ( ys - MAX_RHO / 2.0 ) * rho_max / MAX_RHO * 2.0; 
+    /*  rho = x _cos + y _sin  --->  y = rho/_sin - x _cos/_sin  */
+    if ( 45.0 <= theta && theta <= 135.0 ){ /* 数値の単位は[deg] */
+        for ( x = 0; x < width[n]; x ++ ){
+            y = (int)( ( rho - x * _cos ) / _sin );
+            if ( 0 <= y && y < height[n] )
+                image[n][x][y] = MAX_BRIGHTNESS; 
+        }
+    } else {
+        for ( y = 0; y < height[n]; y ++ ){
+            x = (int)( ( rho - y * _sin ) / _cos );
+            if ( 0 <= x && x < width[n] )
+                image[n][x][y] = MAX_BRIGHTNESS;
+        }
+    }
+    printf("theta = %f rho = %f\n", theta, rho);
+}
+
+void inverse_Hough_transform(int n, int m)
+/* image1 を θρ平面とみなし，しきい値より上の点を画像空間に */
+/* 逆変換して画像中に直線を描く．結果は image2 に代入する．   */
+{
+    int threshold,counter;  /* しきい値，直線のカウンタ */
+    int x,y;  /* 制御変数 */
+    char str[10];  /* 作業変数 */
+
+    printf("読み込んだθρ平面から，画像上の直線を再現します．\n");
+    do {
+        printf("θρ平面上の累積に対するしきい値 (0～255の値）= ");
+        scanf("%d",&threshold);
+        counter = 0;
+        for ( y = 0; y < MAX_RHO;  y ++ )
+            for ( x = 0; x < MAX_THETA; x ++ )
+                if ( image[n][x][y] >= threshold ) counter ++;
+        printf("全部で %d 本の直線が検出されました．\n", counter);
+        printf("この値で OK ? ( y / n ) :");
+        scanf("%s",str);
+    } while ( str[0] != 'y' && str[0] != 'Y' );
+    /* 逆変換処理の実行 */
+    for ( y = 0; y < MAX_RHO; y ++ )
+        for ( x = 0; x < MAX_THETA; x ++ )
+            if ( image[n][x][y] >= threshold )
+                extract_line( x, y , m);
+}
+
+void move_image(int n, int m)
+/* 原画像データをimage2[y][x]に退避する */
+/* その際，階調を落とす (=80)          */
+{
+    int x, y;  /* 制御変数 */
+
+    width[m] = width[n];    height[m] = height[n];
+    for ( y = 0; y < height[n]; y ++ )
+        for ( x = 0; x < width[n]; x ++ ){
+            image[m][x][y] = image[n][x][y];
+            if ( image[m][x][y] == MAX_BRIGHTNESS )
+                image[m][x][y] = 80;
+        }
+}
+
+void check_data(int n)
+{
+    if ( width[n] != MAX_THETA || height[n] != MAX_RHO ){
+        printf("これは対象とするθρ平面のデータと異なります．\n");
+        exit(1);
+    }
+}
+
 int main( )
 {
+    /* Hough変換 */
     load_image(1,"" ); /* 画像を読み込んで image1 へ */
     Hough_transform(1, 2); /* Hough 変換して結果を image2 へ */
-    
-    check_data(2);  /* データのチェック */
-    inverse_Hough_transform(2, 1);  /* Hough逆変換して直線抽出 */
+    save_image(2,"Hough-out.pgm" ); /* image2 を保存する */
 
-    obtain_points_data(1);        /* image1中の点をデータ化   */
+    /* クラスタリング */
+    obtain_points_data(2);        /* image2中の点をデータ化   */
     shuffle_points_data( );       /* データ順序のランダム化   */
-    clustering_using_Kmeans(1, 3);   /* K-平均法でクラスタリング */
-                                  /* してimage2へ描画する     */
-    save_image(3,"" );           /* image2 --> ファイル出力  */
+    clustering_using_Kmeans(2, 3);   /* K-平均法でクラスタリング */
+                                  /* してimage3へ描画する     */
+    save_image(3,"Kmeans-out.pgm" );           /* image2 --> ファイル出力  */
+
+    move_image(1, 4);  /* image1 を image2 へコピー */
+    printf("引き続きθρ平面のデータを読み込みます．\n");
+    check_data(3);  /* データのチェック */
+    inverse_Hough_transform(3, 4);  /* Hough逆変換して直線抽出 */
+    save_image(4,"invHough-out.pgm" );  /* image2 を保存 */
     return 0;
 }
