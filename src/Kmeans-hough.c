@@ -393,12 +393,12 @@ int main( )
     shuffle_points_data( );       /* データ順序のランダム化   */
     clustering_using_Kmeans(2, 3);   /* K-平均法でクラスタリング */
                                   /* してimage3へ描画する     */
-    save_image(3,"Kmeans-out.pgm" );           /* image2 --> ファイル出力  */
+    save_image(3,"Kmeans-out.pgm" );           /* image3 --> ファイル出力  */
 
-    move_image(1, 4);  /* image1 を image2 へコピー */
+    move_image(1, 4);  /* image1 を image4 へコピー */
     printf("引き続きθρ平面のデータを読み込みます．\n");
     check_data(3);  /* データのチェック */
     inverse_Hough_transform(3, 4);  /* Hough逆変換して直線抽出 */
-    save_image(4,"invHough-out.pgm" );  /* image2 を保存 */
+    save_image(4,"invHough-out.pgm" );  /* image4 を保存 */
     return 0;
 }
