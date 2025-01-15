@@ -408,7 +408,10 @@ void extract_line( int xs, int ys, int n)
                 image[n][x][y] = MAX_BRIGHTNESS;
         }
     }
+    double a = (-1) * _cos / _sin;
+    double b = rho / _sin;
     printf("theta = %f rho = %f\n", theta, rho);
+    printf("y = %f x %+f\n", a, b);
 }
 
 void inverse_Hough_transform(int n, int m)
@@ -466,27 +469,27 @@ int main( )
     /* 8近傍ラプラシアン */
     load_image( 0, "" );   /* ファイル → 画像No.0 */
     filtering( 0, 1 );     /* No.0->フィルタ->No.1 */
-    save_image( 1, "Lap-out.pgm" );   /* 画像No.1 → ファイル */
+    save_image( 1, "" );   /* 画像No.1 → ファイル */
 
     /* 2値化 */
     binarize( 1 );         /* 画像No.0を２値化     */
-    save_image( 1, "Bin-out.pgm" );   /* 画像No.0 → ファイル */
+    save_image( 1, "" );   /* 画像No.0 → ファイル */
 
     /* Hough変換 */
     Hough_transform(1, 2); /* Hough 変換して結果を image2 へ */
-    save_image(2,"Hough-out.pgm" ); /* image2 を保存する */
+    save_image(2,"" ); /* image2 を保存する */
 
     /* クラスタリング */
     obtain_points_data(2);        /* image2中の点をデータ化   */
     shuffle_points_data( );       /* データ順序のランダム化   */
     clustering_using_Kmeans(2, 3);   /* K-平均法でクラスタリング */
                                   /* してimage3へ描画する     */
-    save_image(3,"Kmeans-out.pgm" );           /* image3 --> ファイル出力  */
+    save_image(3,"" );           /* image3 --> ファイル出力  */
 
     move_image(0, 4);  /* image1 を image4 へコピー */
     printf("引き続きθρ平面のデータを読み込みます．\n");
     check_data(3);  /* データのチェック */
     inverse_Hough_transform(3, 4);  /* Hough逆変換して直線抽出 */
-    save_image(4,"invHough-out.pgm" );  /* image4 を保存 */
+    save_image(4,"" );  /* image4 を保存 */
     return 0;
 }
