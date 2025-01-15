@@ -156,7 +156,7 @@ void save_NN_data( )
     fclose(fp);
 }
 
-main( )
+int main( )
 {
     load_learn_data( ); /* 教師データの読み込みと結合荷重の初期化 */
     BPlearning( );      /* BP 学習法による結合荷重の最適化        */
