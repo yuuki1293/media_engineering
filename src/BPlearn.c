@@ -144,11 +144,11 @@ void save_NN_data( )
     scanf("%s",file_name);
     fp = fopen( file_name, "w");
     fprintf( fp, "%d %d %d\n", num_input, num_hidden, num_output );
-	fprintf( fp, "input-hidden\n");   // コメント
+	// fprintf( fp, "input-hidden\n");   // コメント
     for ( i = 0; i < num_input; i ++ )
         for ( j = 0; j < num_hidden; j ++ )
             fprintf( fp, "%f\n", wght_in_hid[i][j] );
-		fprintf( fp, "hidden-output\n");    //  コメント
+		// fprintf( fp, "hidden-output\n");    //  コメント
     for ( i = 0; i < num_hidden; i ++ )
         for ( j = 0; j < num_output; j ++ )
             fprintf( fp, "%f\n", wght_hid_out[i][j] );
