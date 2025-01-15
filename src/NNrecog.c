@@ -113,7 +113,7 @@ void calculation( )
     printf("\n全ての未知信号に対する処理を終了しました．\n");
 }
 
-main( )
+int main( )
 {
     load_NN_data( );   /* 結合荷重データの読み込み     */
     calculation( );    /* 未知信号を読み込んで随時出力 */
